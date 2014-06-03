@@ -28,23 +28,6 @@ if sw_vers | grep 10.7 ;then
   [[ -s /Users/kasei_san/.nvm/nvm.sh ]] && . /Users/kasei_san/.nvm/nvm.sh # This loads NVM
 fi
 
-#--------------------------------------------------------------------------
-# autojump {{{
-# see : http://blog.glidenote.com/blog/2012/02/29/autojump-zsh/
-#--------------------------------------------------------------------------
-#alias j="autojump"
-
-BREW_PREFIX=`brew --prefix`
-if [ -e $BREW_PREFIX/etc/autojump ]; then
-    source $BREW_PREFIX/etc/autojump
-fi
-if [ -x /usr/local/bin/brew ]; then
-    BREW_PREFIX=`brew --prefix`
-    fpath=($BREW_PREFIX/share/zsh/functions(N) $BREW_PREFIX/share/zsh/site-functions(N) $fpath)
-fi
-
-# }}}
-
 #---------------------------------------------------------------------------
 # 入力補完 {{{
 #----------------------------------------------------------------------------------------

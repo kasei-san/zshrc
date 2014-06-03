@@ -178,22 +178,18 @@ alias ll='ls -lG'
 alias rm='rm -i'
 alias grep='grep --color'
 
-# if echo ${OSTYPE} | grep "darwin"; then
-# alias irb='irb -Ku'
-# fi
+function cdFunc(){
+  cd "$@"
+  #echo "`pwd`:"
+  ls
+}
+alias cd=cdFunc
 
-# function cdFunc(){
-	# cd "$@"
-	# #echo "`pwd`:"
-	# ls
-# }
-# alias cd=cdFunc
-
-# function mkdirFunc(){
-	# mkdir "$@"
-	# cd "$@"
-# }
-# alias mkdir=mkdirFunc
+function mkdirFunc(){
+  mkdir "$@"
+  cd "$@"
+}
+alias mkdir=mkdirFunc
 
 #.で高速にディレクトリを下る
 rationalise-dot() {

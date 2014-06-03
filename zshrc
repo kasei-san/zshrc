@@ -31,6 +31,9 @@ fi
 # autojump
 [[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
 
+# percol
+source ~/.zsh/percol.zsh
+
 #---------------------------------------------------------------------------
 # 入力補完 {{{
 #----------------------------------------------------------------------------------------
@@ -244,7 +247,5 @@ zstyle ':completion:*:cd:*' ignore-parents parent pwd
 if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
 
 eval "$(hub alias -s)"
-
-source ~/.zsh/percol.zsh
 
 # vim:set foldmethod=marker:

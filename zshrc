@@ -107,8 +107,8 @@ bindkey "^P" history-beginning-search-backward-end
 bindkey "^N" history-beginning-search-forward-end
 
 #^r,^sでインクリメンタル検索
-bindkey "^R" history-incremental-search-backward
-bindkey "^S" history-incremental-search-forward
+# bindkey "^R" history-incremental-search-backward
+# bindkey "^S" history-incremental-search-forward
 #bindkey '^R' history-incremental-pattern-search-backward
 #bindkey '^S' history-incremental-pattern-search-forward
 # }}}
@@ -241,5 +241,7 @@ zstyle ':completion:*:cd:*' ignore-parents parent pwd
 if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
 
 eval "$(hub alias -s)"
+
+source ~/.zsh/percol.zsh
 
 # vim:set foldmethod=marker:

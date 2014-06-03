@@ -3,24 +3,22 @@
 # $ pip install percol
 #
 # * see
-# ターミナル版anything的なpercolをzawの代わりに試してみた - $shibayu36->blog;
-# http://shibayu36.hatenablog.com/entry/2013/10/06/184146
+# https://github.com/mooz/percol
 
-function percol-select-history() {
-    local tac
-    if which tac > /dev/null; then
-        tac="tac"
-    else
-        tac="tail -r"
-    fi
-    BUFFER=$(history -n 1 | \
-        eval $tac | \
-        percol --query "$LBUFFER")
-    CURSOR=$#BUFFER
-    zle clear-screen
-}
-zle -N percol-select-history
-bindkey '^R' percol-select-history
+function exists { which $1 &> /dev/null }
+
+if exists percol; then
+    function percol_select_history() {
+        local tac
+        exists gtac && tac="gtac" || { exists tac && tac="tac" || { tac="tail -r" } }
+        BUFFER=$(fc -l -n 1 | eval $tac | percol --query "$LBUFFER")
+        CURSOR=$#BUFFER         # move cursor
+        zle -R -c               # refresh
+    }
+
+    zle -N percol_select_history
+    bindkey '^R' percol_select_history
+fi
 
 
 # clipboard

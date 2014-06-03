@@ -103,14 +103,6 @@ setopt inc_append_history    # 履歴をインクリメンタルに追加
 setopt hist_no_store         # historyコマンドは履歴に登録しない
 setopt hist_reduce_blanks    # 余分な空白は詰めて記録
 setopt hist_verify           # ヒストリから呼び出したときに一度編集できるように
-
-#コマンド履歴検索
-#^p,^nで同一コマンドの過去引数を引っ張る
-autoload history-search-end
-zle -N history-beginning-search-backward-end history-search-end
-zle -N history-beginning-search-forward-end history-search-end
-bindkey "^P" history-beginning-search-backward-end
-bindkey "^N" history-beginning-search-forward-end
 # }}}
 
 #--------------------------------------------------------------------------
@@ -178,22 +170,18 @@ alias ll='ls -lG'
 alias rm='rm -i'
 alias grep='grep --color'
 
-# if echo ${OSTYPE} | grep "darwin"; then
-# alias irb='irb -Ku'
-# fi
+function cdFunc(){
+  cd "$@"
+  #echo "`pwd`:"
+  ls
+}
+alias cd=cdFunc
 
-# function cdFunc(){
-	# cd "$@"
-	# #echo "`pwd`:"
-	# ls
-# }
-# alias cd=cdFunc
-
-# function mkdirFunc(){
-	# mkdir "$@"
-	# cd "$@"
-# }
-# alias mkdir=mkdirFunc
+function mkdirFunc(){
+  mkdir "$@"
+  cd "$@"
+}
+alias mkdir=mkdirFunc
 
 #.で高速にディレクトリを下る
 rationalise-dot() {
@@ -255,12 +243,6 @@ zstyle ':completion:*' group-name ''
 zstyle ':completion:*:cd:*' tag-order local-directories path-directories
 #cd は親ディレクトリからカレントディレクトリを選択しないので表示させないようにする (例: cd ../<TAB>):
 zstyle ':completion:*:cd:*' ignore-parents parent pwd
-
-#--------------------------------------------------------------------------
-# plugin {{{
-#--------------------------------------------------------------------------
-
-# }}}
 
 if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
 

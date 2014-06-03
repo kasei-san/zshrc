@@ -212,6 +212,30 @@ rationalise-dot() {
 
 # }}}
 
+ #--------------------------------------------------------------------------
+# preexec, precmd {{{
+#--------------------------------------------------------------------------
+# ウインドウタイトルを最後に入力したコマンドにする
+function preexec_screen {
+  # echo -ne "\ek${1%% *}\e\\"
+  echo -ne "\ek${1}\e\\"
+}
+function precmd_screen {
+  echo -ne "\ek$(pwd)\e\\"
+}
+case "${TERM}" in screen)
+  preexec_functions=($preexec_functions preexec_screen)
+esac
+
+function precmd() {
+  psvar=()
+  LANG=en_US.UTF-8 vcs_info
+  [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+  precmd_screen
+}
+
+# }}}
+
 zle -N rationalise-dot
 bindkey . rationalise-dot
 

@@ -1,0 +1,370 @@
+export Lang=ja_JP.UTF-8
+# bindkey -v #vi風キーバインド
+autoload -Uz vcs_info
+
+cdpath=(~ ~/work/)
+
+# color
+local gray=$'%{\e[0;30m%}'
+local red=$'%{\e[0;31m%}'          # 赤色
+local green=$'%{\e[0;32m%}'        # 緑色
+local yellow=$'%{\e[0;33m%}'       # 黄色
+local blue=$'%{\e[0;34m%}'         # 青色
+local purple=$'%{\e[0;35m%}'       # 紫色
+local light_blue=$'%{\e[0;36m%}'   # 水色
+local white=$'%{\e[0;37m%}'        # 白色
+local GRAY=$'%{\e[1;30m%}'
+local RED=$'%{\e[1;31m%}'          # 赤色
+local GREEN=$'%{\e[1;32m%}'        # 緑色
+local YELLOW=$'%{\e[1;33m%}'       # 黄色
+local BLUE=$'%{\e[1;34m%}'         # 青色
+local PURPLE=$'%{\e[1;35m%}'       # 紫色
+local LIGHT_BLUE=$'%{\e[1;36m%}'   # 水色
+local WHITE=$'%{\e[1;37m%}'        # 白色
+local DEFAULT=$white               # 標準の色
+
+# NVM
+if sw_vers | grep 10.7 ;then
+  [[ -s /Users/kasei_san/.nvm/nvm.sh ]] && . /Users/kasei_san/.nvm/nvm.sh # This loads NVM
+fi
+
+#--------------------------------------------------------------------------
+# autojump {{{
+# see : http://blog.glidenote.com/blog/2012/02/29/autojump-zsh/
+#--------------------------------------------------------------------------
+#alias j="autojump"
+
+BREW_PREFIX=`brew --prefix`
+if [ -e $BREW_PREFIX/etc/autojump ]; then
+    source $BREW_PREFIX/etc/autojump
+fi
+if [ -x /usr/local/bin/brew ]; then
+    BREW_PREFIX=`brew --prefix`
+    fpath=($BREW_PREFIX/share/zsh/functions(N) $BREW_PREFIX/share/zsh/site-functions(N) $fpath)
+fi
+
+# }}}
+
+#---------------------------------------------------------------------------
+# 入力補完 {{{
+#----------------------------------------------------------------------------------------
+autoload -U compinit
+compinit -u
+source ~/Dropbox/zsh/cdd
+zstyle ':completion:*' list-colors ''
+
+# 先行予測
+#autoload predict-on
+#predict-on
+
+# タブキー連打で補完候補を順に表示
+setopt auto_menu
+# 自動修正機能(候補を表示)
+setopt correct
+# 補完候補を詰めて表示
+setopt list_packed
+# 補完候補一覧でファイルの種別を識別マーク表示(ls -F の記号)
+setopt list_types
+# パスの最後に付くスラッシュを自動的に削除しない
+setopt noautoremoveslash
+# = 以降でも補完できるようにする( --prefix=/usr 等の場合)
+setopt magic_equal_subst
+# 補完候補リストの日本語を正しく表示
+setopt print_eight_bit
+# 補完の時に大文字小文字を区別しない(但し、大文字を打った場合は小文字に変換しない)
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+# lsコマンドの補完候補にも色付き表示
+#eval `dircolors`
+zstyle ':completion:*:default' list-colors ${LS_COLORS}
+zstyle ':completion:*:default' menu select=1
+# kill の候補にも色付き表示
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([%0-9]#)*=0=01;31'
+
+#setopt auto_cd  #cdがなくてもディレクトリ移動
+setopt correct  #cd - で過去の履歴を表示
+
+export WORDCHARS='*?[]~=&;!#$%^(){}<>'
+
+# }}}
+
+#---------------------------------------------------------------------------
+# color {{{
+#----------------------------------------------------------------------------------------
+#via Mac zshのカラー設定を変更した - 
+# goryugo http://d.hatena.ne.jp/goryugo/20081120/1227129901
+export LSCOLORS=gxfxcxdxbxegedabagacad
+export LS_COLORS='di=36:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
+zstyle ':completion:*' list-colors \
+    'di=36' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
+
+# }}}
+
+#---------------------------------------------------------------------------
+# 履歴関係 {{{
+#----------------------------------------------------------------------------------------
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+
+setopt hist_ignore_all_dups  # 重複するコマンド行は古い方を削除
+setopt hist_ignore_dups      # 直前と同じコマンドラインはヒストリに追加しない
+setopt share_history         # コマンド履歴ファイルを共有する
+setopt append_history        # 履歴を追加 (毎回 .zsh_history を作るのではなく)
+setopt inc_append_history    # 履歴をインクリメンタルに追加
+setopt hist_no_store         # historyコマンドは履歴に登録しない
+setopt hist_reduce_blanks    # 余分な空白は詰めて記録
+setopt hist_verify           # ヒストリから呼び出したときに一度編集できるように
+
+#コマンド履歴検索
+#^p,^nで同一コマンドの過去引数を引っ張る
+autoload history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey "^P" history-beginning-search-backward-end
+bindkey "^N" history-beginning-search-forward-end
+
+#^r,^sでインクリメンタル検索
+bindkey "^R" history-incremental-search-backward
+bindkey "^S" history-incremental-search-forward
+#bindkey '^R' history-incremental-pattern-search-backward
+#bindkey '^S' history-incremental-pattern-search-forward
+# }}}
+
+#--------------------------------------------------------------------------
+# PROMPT {{{
+#--------------------------------------------------------------------------
+setopt PROMPT_SUBST # 色を許可
+local ALERTC=$'%{\e[1;31m%}'
+local LEFTC=$'%{\e[1;36m%}'
+local RIGHTC=$'%{\e[1;36m%}'
+local DEFAULTC=$'%{\e[m%}'
+
+local PROMPT_TEXT="%U%/%%%u "
+PROMPT=${LEFTC}${PROMPT_TEXT}${DEFAULTC}
+PROMPT2="%_%% "
+SPROMPT="%r is correct? [n,y,a,e]: "
+RPROMPT="%1(v|%F{green}%1v%f|)"
+
+# }}}
+
+#--------------------------------------------------------------------------
+# export {{{
+#--------------------------------------------------------------------------
+# for MacOS
+if echo ${OSTYPE} | grep "darwin"; then
+  if echo ${OSTYPE} | grep "darwin11"; then
+    export EDITOR=/usr/local/Cellar/vim/7.4.161/bin/vim
+    export PATH=/usr/local/Cellar/vim/7.4.161/bin/vim:$PATH
+  else
+    export EDITOR=/usr/local/Cellar/macvim/HEAD/MacVim.app/Contents/MacOS/Vim
+    export PATH=/usr/local/Cellar/macvim/HEAD/MacVim.app/Contents/MacOS:$PATH
+  fi
+
+  export PATH=/usr/local/bin:$PATH # brewがある環境用
+
+  # for fakeclip.vim
+  export __CF_USER_TEXT_ENCODING="0x1F5:0x08000100:0"
+
+  alias vim='Vim'
+
+  # for rvm
+  if [[ -s $HOME/.rvm/bin ]] ; then
+    export PATH=$HOME/.rvm/bin/:$PATH
+    if [[ -s $HOME/.rvm/scripts/rvm ]] ; then source $HOME/.rvm/scripts/rvm; fi
+    # for lion
+    if echo ${OSTYPE} | grep "darwin11"; then
+      rvm use 1.9.2-p290@rails3
+      export CC=/usr/bin/gcc-4.2
+    else
+      rvm use 1.8.7-p174@rails2-brew
+    fi
+  fi
+  #
+fi
+
+# }}}
+
+#--------------------------------------------------------------------------
+# alias {{{
+#--------------------------------------------------------------------------
+# H:
+alias ls='ls -HFG'
+alias la='ls -AlG'
+alias ll='ls -lG'
+
+alias rm='rm -i'
+alias grep='grep --color'
+
+# if echo ${OSTYPE} | grep "darwin"; then
+# alias irb='irb -Ku'
+# fi
+
+# function cdFunc(){
+	# cd "$@"
+	# #echo "`pwd`:"
+	# ls
+# }
+# alias cd=cdFunc
+
+# function mkdirFunc(){
+	# mkdir "$@"
+	# cd "$@"
+# }
+# alias mkdir=mkdirFunc
+
+#.で高速にディレクトリを下る
+rationalise-dot() {
+	if [[ $LBUFFER = *.. ]]; then
+		LBUFFER+=/..
+	else
+		LBUFFER+=.
+	fi
+}
+
+# find + grep
+FG(){
+	local filePattern
+	local searchWord
+	local option
+	local cmd
+	
+	if [ $# -eq 0 ]; then
+		filePattern='.*[^(_spec)].rb'
+		searchWord=`pbpaste`
+		option='regex'
+	elif [ $# -eq 1 ]; then
+		filePattern='.*[^(_spec)].rb'
+		searchWord="$1"
+		option='regex'
+	else
+		filePattern="$1"
+		searchWord="$2"
+		option='name'
+	fi
+	cmd="find . -$option \"$filePattern\" | xargs grep $searchWord --color"
+	echo "$cmd"
+	eval "$cmd"
+}
+
+# find + grep で def を検索
+FGDEF(){
+	local filePattern
+	local searchWord
+	
+	if [ $# -eq 0 ]; then
+		searchWord=`pbpaste` 
+	else
+		searchWord="$1"
+	fi
+	# echo find . -name "*.rb" \| xargs grep \"def $searchWord\"
+	find . -name "*.rb" | xargs grep "def ${searchWord}"
+}
+
+# venderにワープ
+CDVENDER(){
+	
+
+}
+
+# 文字コード変換は苦肉の策
+alias -g ForVim='|nkf -w --oc=UTF-16 | vim -'
+
+# 圧縮・解凍
+#alias zip='zip -r'
+
+# }}}
+
+zle -N rationalise-dot
+bindkey . rationalise-dot
+
+setopt AUTO_PUSHD # pushhdを自動化
+
+# Git だろうと Mercurial だろうと、ブランチ名をzshのプロンプトにスマートに表示する方法 - ess sup http://d.hatena.ne.jp/mollifier/20090814/p1
+zstyle ':vcs_info:*' formats '(%s)-[%b]'
+zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
+
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list _history
+zstyle ':completion:*:messages' format $YELLOW'%d'$DEFAULT
+zstyle ':completion:*:warnings' format $RED'No matches for:'$YELLOW' %d'$DEFAULT
+zstyle ':completion:*:descriptions' format $YELLOW'completing %B%d%b'$DEFAULT
+zstyle ':completion:*:corrections' format $YELLOW'%B%d '$RED'(errors: %e)%b'$DEFAULT
+zstyle ':completion:*:options' description 'yes'
+
+# グループ名に空文字列を指定すると，マッチ対象のタグ名がグループ名に使われる。
+# したがって，すべての マッチ種別を別々に表示させたいなら以下のようにする
+zstyle ':completion:*' group-name ''
+
+# カレントディレクトリに候補がない場合のみ cdpath 上のディレクトリを候補に出す
+zstyle ':completion:*:cd:*' tag-order local-directories path-directories
+#cd は親ディレクトリからカレントディレクトリを選択しないので表示させないようにする (例: cd ../<TAB>):
+zstyle ':completion:*:cd:*' ignore-parents parent pwd
+
+#--------------------------------------------------------------------------
+# preexec, precmd {{{
+#--------------------------------------------------------------------------
+# ウインドウタイトルを最後に入力したコマンドにする
+function preexec_screen {
+  # echo -ne "\ek${1%% *}\e\\"
+  echo -ne "\ek${1}\e\\"
+}
+function precmd_screen {
+  echo -ne "\ek$(pwd)\e\\"
+}
+case "${TERM}" in screen)
+  preexec_functions=($preexec_functions preexec_screen)
+  # precmd_functions=($precmd_functions precmd_screen)
+esac
+
+# preexec_functions がなぜだか動作しない
+# function preexec() {
+  # preexec_screen
+  # preexec_prompt
+# }
+
+function precmd() {
+  psvar=()
+  LANG=en_US.UTF-8 vcs_info
+  [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
+  precmd_screen
+}
+
+# }}}
+
+#--------------------------------------------------------------------------
+# cdd  {{{
+#--------------------------------------------------------------------------
+function chpwd() {
+  _reg_pwd_screennum
+}
+# }}}
+
+#--------------------------------------------------------------------------
+# plugin {{{
+#--------------------------------------------------------------------------
+# インクリメンタルに検索
+#source .zsh/plugin/incr*.zsh
+# source .zsh/plugin/zsh-fuzzy-match/fuzzy-match.zsh
+# }}}
+
+if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
+
+eval "$(hub alias -s)"
+
+# function percol-select-history() {
+    # local tac
+    # if which tac > /dev/null; then
+        # tac="tac"
+    # else
+        # tac="tail -r"
+    # fi
+    # BUFFER=$(history -n 1 | \
+        # eval $tac | \
+        # percol --match-method migemo --query "$LBUFFER")
+    # CURSOR=$#BUFFER
+    # zle clear-screen
+# }
+# zle -N percol-select-history
+# bindkey '^r' percol-select-history
+
+# vim:set foldmethod=marker:

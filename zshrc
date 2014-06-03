@@ -204,57 +204,6 @@ rationalise-dot() {
 	fi
 }
 
-# find + grep
-FG(){
-	local filePattern
-	local searchWord
-	local option
-	local cmd
-	
-	if [ $# -eq 0 ]; then
-		filePattern='.*[^(_spec)].rb'
-		searchWord=`pbpaste`
-		option='regex'
-	elif [ $# -eq 1 ]; then
-		filePattern='.*[^(_spec)].rb'
-		searchWord="$1"
-		option='regex'
-	else
-		filePattern="$1"
-		searchWord="$2"
-		option='name'
-	fi
-	cmd="find . -$option \"$filePattern\" | xargs grep $searchWord --color"
-	echo "$cmd"
-	eval "$cmd"
-}
-
-# find + grep で def を検索
-FGDEF(){
-	local filePattern
-	local searchWord
-	
-	if [ $# -eq 0 ]; then
-		searchWord=`pbpaste` 
-	else
-		searchWord="$1"
-	fi
-	# echo find . -name "*.rb" \| xargs grep \"def $searchWord\"
-	find . -name "*.rb" | xargs grep "def ${searchWord}"
-}
-
-# venderにワープ
-CDVENDER(){
-	
-
-}
-
-# 文字コード変換は苦肉の策
-alias -g ForVim='|nkf -w --oc=UTF-16 | vim -'
-
-# 圧縮・解凍
-#alias zip='zip -r'
-
 # }}}
 
 zle -N rationalise-dot
@@ -284,70 +233,13 @@ zstyle ':completion:*:cd:*' tag-order local-directories path-directories
 zstyle ':completion:*:cd:*' ignore-parents parent pwd
 
 #--------------------------------------------------------------------------
-# preexec, precmd {{{
-#--------------------------------------------------------------------------
-# ウインドウタイトルを最後に入力したコマンドにする
-function preexec_screen {
-  # echo -ne "\ek${1%% *}\e\\"
-  echo -ne "\ek${1}\e\\"
-}
-function precmd_screen {
-  echo -ne "\ek$(pwd)\e\\"
-}
-case "${TERM}" in screen)
-  preexec_functions=($preexec_functions preexec_screen)
-  # precmd_functions=($precmd_functions precmd_screen)
-esac
-
-# preexec_functions がなぜだか動作しない
-# function preexec() {
-  # preexec_screen
-  # preexec_prompt
-# }
-
-function precmd() {
-  psvar=()
-  LANG=en_US.UTF-8 vcs_info
-  [[ -n "$vcs_info_msg_0_" ]] && psvar[1]="$vcs_info_msg_0_"
-  precmd_screen
-}
-
-# }}}
-
-#--------------------------------------------------------------------------
-# cdd  {{{
-#--------------------------------------------------------------------------
-function chpwd() {
-  _reg_pwd_screennum
-}
-# }}}
-
-#--------------------------------------------------------------------------
 # plugin {{{
 #--------------------------------------------------------------------------
-# インクリメンタルに検索
-#source .zsh/plugin/incr*.zsh
-# source .zsh/plugin/zsh-fuzzy-match/fuzzy-match.zsh
+
 # }}}
 
 if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
 
 eval "$(hub alias -s)"
-
-# function percol-select-history() {
-    # local tac
-    # if which tac > /dev/null; then
-        # tac="tac"
-    # else
-        # tac="tail -r"
-    # fi
-    # BUFFER=$(history -n 1 | \
-        # eval $tac | \
-        # percol --match-method migemo --query "$LBUFFER")
-    # CURSOR=$#BUFFER
-    # zle clear-screen
-# }
-# zle -N percol-select-history
-# bindkey '^r' percol-select-history
 
 # vim:set foldmethod=marker:

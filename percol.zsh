@@ -50,3 +50,12 @@ zle -N searchClipBoard
 
 # C-pでクリップボード履歴の検索
 bindkey '^p' searchClipBoard
+
+# C-b でブランチのチェックアウト
+if exists percol; then
+  function percol_checkout_branch() {
+    git branch | percol | sed -e "s/\*//" | xargs git checkout
+  }
+  zle -N percol_checkout_branch
+  bindkey '^b' percol_checkout_branch
+fi

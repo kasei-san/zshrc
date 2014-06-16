@@ -198,6 +198,10 @@ alias g=git
 alias gst='g st'
 alias gdf='g df'
 alias gbr='g br'
+alias gvv='g vv'
+alias gco='g co'
+alias gci='g ci'
+alias gadl='g adl'
 # }}}
 
 # }}}

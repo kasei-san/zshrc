@@ -201,7 +201,10 @@ alias gbr='g br'
 alias gvv='g vv'
 alias gco='g co'
 alias gci='g ci'
-alias gadl='g adl'
+alias gcia='g ci -a -m'
+alias gad='g add'
+alias gadp='g add -p'
+alias gp='git push'
 # }}}
 
 # }}}

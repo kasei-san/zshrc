@@ -258,4 +258,5 @@ if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
 
 eval "$(hub alias -s)"
 
+eval "$(direnv hook $0)"
 # vim:set foldmethod=marker:

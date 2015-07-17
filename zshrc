@@ -28,9 +28,6 @@ if sw_vers | grep 10.7 ;then
   [[ -s /Users/kasei_san/.nvm/nvm.sh ]] && . /Users/kasei_san/.nvm/nvm.sh # This loads NVM
 fi
 
-# autojump
-[[ -s `brew --prefix`/etc/autojump.sh ]] && . `brew --prefix`/etc/autojump.sh
-
 # percol
 source ~/.zsh/percol.zsh
 

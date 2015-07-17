@@ -137,20 +137,6 @@ if echo ${OSTYPE} | grep "darwin"; then
   export __CF_USER_TEXT_ENCODING="0x1F5:0x08000100:0"
 
   alias vim='Vim'
-
-  # for rvm
-  if [[ -s $HOME/.rvm/bin ]] ; then
-    export PATH=$HOME/.rvm/bin/:$PATH
-    if [[ -s $HOME/.rvm/scripts/rvm ]] ; then source $HOME/.rvm/scripts/rvm; fi
-    # for lion
-    if echo ${OSTYPE} | grep "darwin11"; then
-      rvm use 1.9.2-p290@rails3
-      export CC=/usr/bin/gcc-4.2
-    else
-      rvm use 1.8.7-p174@rails2-brew
-    fi
-  fi
-  #
 fi
 
 # }}}

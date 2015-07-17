@@ -166,20 +166,8 @@ alias la='ls -AlG'
 alias ll='ls -lG'
 
 alias rm='rm -i'
-alias grep='grep --color'
-
-function cdFunc(){
-  cd "$@"
-  #echo "`pwd`:"
-  ls
-}
-alias cd=cdFunc
-
-function mkdirFunc(){
-  mkdir "$@"
-  cd "$@"
-}
-alias mkdir=mkdirFunc
+# see : http://hamukazu.com/2014/02/24/why-grep-can-be-accelerated/
+alias grep='LANG=C grep --color'
 
 #.で高速にディレクトリを下る
 rationalise-dot() {

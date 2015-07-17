@@ -121,24 +121,15 @@ RPROMPT="%1(v|%F{green}%1v%f|)"
 #--------------------------------------------------------------------------
 # export {{{
 #--------------------------------------------------------------------------
-# for MacOS
-if echo ${OSTYPE} | grep "darwin"; then
-  if echo ${OSTYPE} | grep "darwin11"; then
-    export EDITOR=/usr/local/Cellar/vim/7.4.161/bin/vim
-    export PATH=/usr/local/Cellar/vim/7.4.161/bin/vim:$PATH
-  else
-    export EDITOR=/usr/local/Cellar/macvim/HEAD/MacVim.app/Contents/MacOS/Vim
-    export PATH=/usr/local/Cellar/macvim/HEAD/MacVim.app/Contents/MacOS:$PATH
-  fi
+# for MacVim
+export EDITOR=/usr/local/Cellar/macvim/HEAD/MacVim.app/Contents/MacOS/Vim
+export PATH=/usr/local/Cellar/macvim/HEAD/MacVim.app/Contents/MacOS:$PATH
+alias vim='Vim'
 
-  export PATH=/usr/local/bin:$PATH # brewがある環境用
+# for fakeclip.vim
+export __CF_USER_TEXT_ENCODING="0x1F5:0x08000100:0"
 
-  # for fakeclip.vim
-  export __CF_USER_TEXT_ENCODING="0x1F5:0x08000100:0"
-
-  alias vim='Vim'
-fi
-
+export PATH=/usr/local/bin:$PATH # brewがある環境用
 # }}}
 
 #--------------------------------------------------------------------------

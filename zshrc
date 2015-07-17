@@ -178,7 +178,7 @@ alias vss='vagrant ssh'
 # }}}
 # }}}
 
- #--------------------------------------------------------------------------
+#--------------------------------------------------------------------------
 # preexec, precmd {{{
 #--------------------------------------------------------------------------
 # ウインドウタイトルを最後に入力したコマンドにする
@@ -229,8 +229,6 @@ zstyle ':completion:*:cd:*' tag-order local-directories path-directories
 zstyle ':completion:*:cd:*' ignore-parents parent pwd
 
 if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
-
-eval "$(hub alias -s)"
-
-eval "$(direnv hook $0)"
+if which hub > /dev/null; then eval "$(hub alias -s)"; fi
+if which direnv > /dev/null; then eval "$(direnv hook $0)"; fi
 # vim:set foldmethod=marker:

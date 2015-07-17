@@ -39,7 +39,6 @@ source ~/.zsh/percol.zsh
 #----------------------------------------------------------------------------------------
 autoload -U compinit
 compinit -u
-source ~/Dropbox/zsh/cdd
 zstyle ':completion:*' list-colors ''
 
 # 先行予測

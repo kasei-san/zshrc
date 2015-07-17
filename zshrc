@@ -168,6 +168,7 @@ alias gcia='g ci -a -m'
 alias gad='g add'
 alias gadp='g add -p'
 alias gp='git pull --rebase --no-ff'
+alias gpo='git push origin'
 # }}}
 
 #--------------------------------------------------------------------------

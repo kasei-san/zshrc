@@ -169,6 +169,9 @@ alias gad='g add'
 alias gadp='g add -p'
 alias gp='git pull --rebase --no-ff'
 alias gpo='git push origin'
+function gchb(){
+  command git checkout -b $1 origin/$1
+}
 # }}}
 
 #--------------------------------------------------------------------------

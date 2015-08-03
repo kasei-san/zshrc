@@ -64,6 +64,7 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([%0-9]#)*=0=01;31
 setopt correct  #cd - で過去の履歴を表示
 
 export WORDCHARS='*?[]~=&;!#$%^(){}<>'
+export NOKOGIRI_USE_SYSTEM_LIBRARIES=1
 
 # }}}
 

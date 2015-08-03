@@ -23,11 +23,6 @@ local LIGHT_BLUE=$'%{\e[1;36m%}'   # 水色
 local WHITE=$'%{\e[1;37m%}'        # 白色
 local DEFAULT=$white               # 標準の色
 
-# NVM
-if sw_vers | grep 10.7 ;then
-  [[ -s /Users/kasei_san/.nvm/nvm.sh ]] && . /Users/kasei_san/.nvm/nvm.sh # This loads NVM
-fi
-
 # percol
 source ~/.zsh/percol.zsh
 

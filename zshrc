@@ -147,3 +147,23 @@ if which direnv > /dev/null; then eval "$(direnv hook $0)"; fi
 
 # percol
 source ~/.zsh/percol.zsh
+
+fpath=(/usr/local/share/zsh-completions $fpath)
+autoload -Uz compinit
+compinit
+
+#--------------------------------------------------------------------------
+# python {{{
+#--------------------------------------------------------------------------
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list _history
+zstyle ':completion:*:messages' format $YELLOW'%d'$DEFAULT
+zstyle ':completion:*:warnings' format $RED'No matches for:'$YELLOW' %d'$DEFAULT
+zstyle ':completion:*:descriptions' format $YELLOW'completing %B%d%b'$DEFAULT
+zstyle ':completion:*:corrections' format $YELLOW'%B%d '$RED'(errors: %e)%b'$DEFAULT
+zstyle ':completion:*:options' description 'yes'
+
+# グループ名に空文字列を指定すると，マッチ対象のタグ名がグループ名に使われる。
+# したがって，すべての マッチ種別を別々に表示させたいなら以下のようにする
+zstyle ':completion:*' group-name ''
+# }}}

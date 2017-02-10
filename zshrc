@@ -167,3 +167,12 @@ zstyle ':completion:*:options' description 'yes'
 # したがって，すべての マッチ種別を別々に表示させたいなら以下のようにする
 zstyle ':completion:*' group-name ''
 # }}}
+
+#--------------------------------------------------------------------------
+# zsh-notify  {{{
+#--------------------------------------------------------------------------
+# see : http://qiita.com/kei_s/items/96ee6929013f587b5878
+source ~/.zsh/plugins/zsh-notify/notify.plugin.zsh
+export SYS_NOTIFIER=/usr/local/bin/terminal-notifier
+
+# }}}

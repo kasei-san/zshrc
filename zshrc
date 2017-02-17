@@ -73,8 +73,10 @@ zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
 # for MacVim
 #export EDITOR=/usr/local/Cellar/macvim/HEAD/MacVim.app/Contents/MacOS/Vim
 #export PATH=/usr/local/Cellar/macvim/HEAD/MacVim.app/Contents/MacOS:$PATH
-export EDITOR=vim
-alias vim='Vim'
+#export EDITOR=vim
+#alias vim='Vim'
+export EDITOR=nvim
+alias vim='nvim'
 # }}}
 
 #--------------------------------------------------------------------------
@@ -172,7 +174,25 @@ zstyle ':completion:*' group-name ''
 # zsh-notify  {{{
 #--------------------------------------------------------------------------
 # see : http://qiita.com/kei_s/items/96ee6929013f587b5878
-source ~/.zsh/plugins/zsh-notify/notify.plugin.zsh
 export SYS_NOTIFIER=/usr/local/bin/terminal-notifier
+source ~/.zsh/plugins/zsh-notify/notify.plugin.zsh
 
+# }}}
+
+#--------------------------------------------------------------------------
+# zplug {{{
+#--------------------------------------------------------------------------
+export ZPLUG_HOME=/usr/local/opt/zplug
+source $ZPLUG_HOME/init.zsh
+source ${HOME}/.zsh/zplug/init.zsh
+
+# install
+if ! zplug check --verbose; then
+  printf 'Install? [y/N]: '
+  if read -q; then
+    echo; zplug install
+  fi
+fi
+
+zplug load --verbose
 # }}}

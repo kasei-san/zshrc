@@ -103,7 +103,6 @@ zle -N rationalise-dot
 bindkey . rationalise-dot
 
 alias tailf='tail -f'
-alias sed='gsed'
 
 #--------------------------------------------------------------------------
 # git {{{

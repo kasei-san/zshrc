@@ -146,8 +146,8 @@ if which direnv > /dev/null; then eval "$(direnv hook $0)"; fi
 [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
 # vim:set foldmethod=marker:
 
-# percol
-source ~/.zsh/percol.zsh
+# fzf
+source ~/.zsh/fzf.zsh
 
 fpath=(/usr/local/share/zsh-completions $fpath)
 autoload -Uz compinit
@@ -195,3 +195,5 @@ fi
 
 zplug load --verbose
 # }}}
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

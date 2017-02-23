@@ -1,13 +1,17 @@
 # see: https://github.com/junegunn/fzf/wiki/examples#changing-directory
 fd() {
+  clear
   local dir
   dir=$(find ${1:-.} -path '*/\.*' -prune \
                   -o -type d -print 2> /dev/null | fzf +m) &&
   cd "$dir"
+  ll
 }
 
 # see: https://github.com/junegunn/fzf/wiki/examples#git
+# browse git branches
 fbr() {
+  clear
   local branches branch
   branches=$(git branch --all | grep -v HEAD) &&
   branch=$(echo "$branches" |
@@ -16,12 +20,15 @@ fbr() {
 }
 
 # see: https://github.com/junegunn/fzf/wiki/examples#command-history
+# browse command histories
 fh() {
-    eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
+  clear
+  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
 }
 
-# browse chrome history
+# browse chrome histories
 bh() {
+  clear
   local cols sep
   cols=$(( COLUMNS / 3 ))
   sep='{{::}}'

@@ -118,11 +118,8 @@ alias gbr='g br'
 alias gvv='g vv'
 alias gco='g co'
 alias gci='g ci'
-alias gcia='g ci -a -m'
 alias gad='g add'
-alias gadp='g add -p'
 alias gp='git pull --rebase --no-ff'
-alias gcom='git checkout master'
 alias gpo='git push origin'
 # }}}
 

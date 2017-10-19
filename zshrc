@@ -104,6 +104,10 @@ bindkey . rationalise-dot
 
 alias tailf='tail -f'
 
+alias be='bundle exec'
+alias ber='bundle exec rspec -c'
+alias beru='bundle exec rubocop -a'
+
 #--------------------------------------------------------------------------
 # git {{{
 #--------------------------------------------------------------------------

@@ -17,13 +17,14 @@ fbr() {
   branch=$(echo "$branches" |
            fzf-tmux -d $(( 2 + $(wc -l <<< "$branches") )) +m) &&
   git checkout $(echo "$branch" | sed "s/.* //" | sed "s#remotes/[^/]*/##")
+  clear
 }
 
 # see: https://github.com/junegunn/fzf/wiki/examples#command-history
 # browse command histories
 fh() {
   clear
-  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
+  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | sed 's/ *[0-9]* *//' | fzf +s --tac )
 }
 
 # browse chrome histories
@@ -35,7 +36,7 @@ bh() {
 
   # Copy History DB to circumvent the lock
   # - See http://stackoverflow.com/questions/8936878 for the file path
-  cp -f ~/Library/Application\ Support/Vivaldi/Default/History /tmp/h
+  cp -f ~/Library/Application\ Support/Google/Chrome/Default/History /tmp/h
 
   sqlite3 -separator $sep /tmp/h \
     "select substr(title, 1, $cols), url

@@ -147,9 +147,6 @@ if which direnv > /dev/null; then eval "$(direnv hook $0)"; fi
 [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
 # vim:set foldmethod=marker:
 
-# fzf
-source ~/.zsh/fzf.zsh
-
 fpath=(/usr/local/share/zsh-completions $fpath)
 autoload -Uz compinit
 compinit
@@ -179,22 +176,5 @@ source ~/.zsh/plugins/zsh-notify/notify.plugin.zsh
 
 # }}}
 
-#--------------------------------------------------------------------------
-# zplug {{{
-#--------------------------------------------------------------------------
-export ZPLUG_HOME=/usr/local/opt/zplug
-source $ZPLUG_HOME/init.zsh
-source ${HOME}/.zsh/zplug/init.zsh
-
-# install
-if ! zplug check --verbose; then
-  printf 'Install? [y/N]: '
-  if read -q; then
-    echo; zplug install
-  fi
-fi
-
-zplug load --verbose
-# }}}
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# fzf
+source ~/.zsh/fzf.zsh

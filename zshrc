@@ -82,11 +82,6 @@ zstyle ':vcs_info:*' actionformats '(%s)-[%b|%a]'
 #--------------------------------------------------------------------------
 # Editor {{{
 #--------------------------------------------------------------------------
-# for MacVim
-#export EDITOR=/usr/local/Cellar/macvim/HEAD/MacVim.app/Contents/MacOS/Vim
-#export PATH=/usr/local/Cellar/macvim/HEAD/MacVim.app/Contents/MacOS:$PATH
-#export EDITOR=vim
-#alias vim='Vim'
 export EDITOR=nvim
 alias vim='nvim'
 # }}}

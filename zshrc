@@ -174,14 +174,5 @@ zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*' group-name ''
 # }}}
 
-#--------------------------------------------------------------------------
-# zsh-notify  {{{
-#--------------------------------------------------------------------------
-# see : http://qiita.com/kei_s/items/96ee6929013f587b5878
-export SYS_NOTIFIER=/usr/local/bin/terminal-notifier
-source ~/.zsh/plugins/zsh-notify/notify.plugin.zsh
-
-# }}}
-
 # fzf
 source ~/.zsh/fzf.zsh

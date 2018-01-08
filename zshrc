@@ -57,9 +57,21 @@ function precmd() {
   precmd_screen
 }
 
-PROMPT_TEXT="%U%/%%%u "
-VCPROMPT="%1(v|%F{green}%1v%f |)"
-PROMPT=${VCPROMPT}${LEFTC}${PROMPT_TEXT}${DEFAULTC}
+function aws_prompt() {
+  local profile=default
+
+  if [ -n "$AWS_PROFILE" ]; then
+    profile=$AWS_PROFILE
+  fi
+
+  echo "%F{yellow}(aws:${profile})%f"
+}
+
+PROMPT_TEXT="%U%/%%%u"
+VCPROMPT="%1(v|%F{green}%1v%f |)" # gitの情報
+TIME="%*" # 現在時刻
+PROMPT='${VCPROMPT}$(aws_prompt) ${LEFTC}${PROMPT_TEXT}${DEFAULTC}
+${TIME} $ '
 SPROMPT="%r is correct? [n,y,a,e]: "
 
 autoload -Uz vcs_info

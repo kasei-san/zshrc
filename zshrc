@@ -126,8 +126,9 @@ alias gvv='g vv'
 alias gco='g co'
 alias gci='g ci'
 alias gad='g add'
-alias gp='git pull --rebase --no-ff'
 alias gpo='git push origin'
+alias git-delete-merged-branches='git branch --merged | grep -v master | xargs -I % git branch -d %'
+alias gp='git pull --rebase --no-ff && git-delete-merged-branches'
 # }}}
 
 #--------------------------------------------------------------------------

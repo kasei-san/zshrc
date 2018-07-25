@@ -116,14 +116,21 @@ alias spec='bundle exec rspec -c'
 alias cop='bundle exec rubocop -a'
 
 #--------------------------------------------------------------------------
+# fzf {{{
+#--------------------------------------------------------------------------
+source ~/.zsh/fzf.zsh
+# }}}
+
+#--------------------------------------------------------------------------
 # git {{{
 #--------------------------------------------------------------------------
+alias -g B='`git branch -a | fzf --prompt "GIT BRANCH>" | head -n 1 | sed -e "s/^\*\s*//g"`'
 alias g=git
 alias gst='g st'
 alias gdf='g df'
 alias gbr='g br'
 alias gvv='g vv'
-alias gco='g co'
+alias gco='g co B'
 alias gci='g ci'
 alias gad='g add'
 alias gpo='git push origin'
@@ -185,8 +192,6 @@ zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*' group-name ''
 # }}}
 
-# fzf
-source ~/.zsh/fzf.zsh
 
 # postgresql 9.6
 export PATH="/usr/local/opt/postgresql@9.6/bin:$PATH"

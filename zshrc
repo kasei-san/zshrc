@@ -136,6 +136,7 @@ alias gad='g add'
 alias gpo='git push origin'
 alias git-delete-merged-branches='git branch --merged | grep -v master | xargs -I % git branch -d %'
 alias gp='git pull --rebase --no-ff && git-delete-merged-branches'
+alias grh='git reset --hard'
 # }}}
 
 #--------------------------------------------------------------------------

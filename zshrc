@@ -202,3 +202,6 @@ zstyle ':completion:*' group-name ''
 
 # postgresql 9.6
 export PATH="/usr/local/opt/postgresql@9.6/bin:$PATH"
+
+# for nodenv
+eval "$(nodenv init -)"

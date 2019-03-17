@@ -24,8 +24,9 @@ fbr() {
 # browse command histories
 fh() {
   clear
-  eval $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | sed 's/ *[0-9]* *//' | fzf +s --tac )
+  print -z $( ([ -n "$ZSH_NAME" ] && fc -l 1 || history) | fzf +s --tac | sed 's/ *[0-9]* *//')
 }
+# fh - repeat history
 
 # browse chrome histories
 bh() {

@@ -60,6 +60,7 @@ alias tailf='tail -f'
 
 alias tf='terraform'
 alias code='cursor'
+alias open='explorer'
 # }}}
 
 #---------------------------------------------------------------------------

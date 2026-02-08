@@ -159,7 +159,6 @@ export DOCKER_HOST=unix:///${HOME}/.docker/run/docker.sock
 # other {{{
 #--------------------------------------------------------------------------
 alias pp='pbpaste | patch -p1'
-alias open='explorer'
 # }}}
 # }}}
 

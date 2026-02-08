@@ -115,6 +115,8 @@ alias be='bundle exec'
 alias spec='bundle exec rspec -c'
 alias cop='bundle exec rubocop -a'
 
+alias tf='terraform'
+
 #--------------------------------------------------------------------------
 # fzf {{{
 #--------------------------------------------------------------------------
@@ -135,7 +137,8 @@ alias gci='g ci'
 alias gad='g add'
 alias gpo='git push origin'
 alias git-delete-merged-branches='git branch --merged | grep -v master | xargs -I % git branch -d %'
-alias gp='git pull --rebase --no-ff && git-delete-merged-branches'
+alias gp='git pull --rebase --no-ff --prune && git-delete-merged-branches'
+#alias gp='git pull --rebase --no-ff --prune'
 alias grh='git reset --hard'
 # }}}
 
@@ -147,12 +150,16 @@ alias dc='d container'
 alias dcl='d container list --all'
 alias di='d image'
 alias dil='d image list'
+
+export DOCKER_HOST=unix:///${HOME}/.docker/run/docker.sock
+
 # }}}
 
 #--------------------------------------------------------------------------
 # other {{{
 #--------------------------------------------------------------------------
 alias pp='pbpaste | patch -p1'
+alias open='explorer'
 # }}}
 # }}}
 
@@ -162,9 +169,11 @@ alias pp='pbpaste | patch -p1'
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH=${PYENV_ROOT}/bin:$PATH
 eval "$(pyenv init -)"
+# pip
+export PATH=$PATH:/Users/kobayashi/.local/bin
 # }}}
 
-if which rbenv > /dev/null; then eval "$(rbenv init - zsh)"; fi
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 if which hub > /dev/null; then eval "$(hub alias -s)"; fi
 if which direnv > /dev/null; then eval "$(direnv hook $0)"; fi
 
@@ -196,5 +205,38 @@ zstyle ':completion:*' group-name ''
 # postgresql 9.6
 export PATH="/usr/local/opt/postgresql@9.6/bin:$PATH"
 
-# for nodenv
-eval "$(nodenv init -)"
+# for nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# eb
+export PATH="/Users/kobayashi/.ebcli-virtual-env/executables:$PATH"
+
+# ruby
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@3)"
+export LDFLAGS="-L/opt/homebrew/opt/readline/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/readline/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/readline/lib/pkgconfig"
+
+# snap
+if [[ $(which snap) ]]; then
+    # /bin/snap を PATH に追加
+    export PATH="/snap/bin:$PATH"
+fi
+
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+
+# deno
+export DENO_INSTALL="$HOME/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"
+
+alias code='cursor'
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/completion.zsh.inc'; fi
+export CLOUDSDK_PYTHON=$(pyenv which python3)
+export PATH="/opt/homebrew/share/google-cloud-sdk/bin:$PATH"

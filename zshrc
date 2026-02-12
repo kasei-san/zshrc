@@ -58,13 +58,41 @@ function precmd() {
 }
 
 function aws_prompt() {
-  local profile=default
+  local profile=${AWS_PROFILE:-default}
+  local account_id=""
+  local config=~/.aws/config
 
-  if [ -n "$AWS_PROFILE" ]; then
-    profile=$AWS_PROFILE
+  if [ -f "$config" ]; then
+    account_id=$(awk -v prof="$profile" '
+      BEGIN {
+        if (prof == "default") target = "[default]"
+        else target = "[profile " prof "]"
+      }
+      $0 == target { found=1; next }
+      /^\[/ { found=0 }
+      found && /^login_session/ {
+        n = split($3, a, ":")
+        if (n >= 5) print a[5]
+        exit
+      }
+    ' "$config")
   fi
 
-  echo "%F{yellow}(aws:${profile})%f"
+  if [ -n "$account_id" ]; then
+    local -A aws_account_names=(
+      [751702759523]="ota-stage"
+      [014885975986]="ota-prod"
+      [342284153948]="lcl"
+    )
+    local name=${aws_account_names[$account_id]}
+    if [ -n "$name" ]; then
+      echo "%F{yellow}(aws:${account_id}(${name}))%f"
+    else
+      echo "%F{yellow}(aws:${account_id})%f"
+    fi
+  else
+    echo "%F{yellow}(aws:${profile})%f"
+  fi
 }
 
 PROMPT_TEXT="%U%/%%%u"

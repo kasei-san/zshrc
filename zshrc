@@ -259,6 +259,7 @@ export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 
 alias code='cursor'
+alias c='claude'
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/path.zsh.inc'; fi

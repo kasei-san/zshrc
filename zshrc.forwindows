@@ -60,7 +60,11 @@ alias tailf='tail -f'
 
 alias tf='terraform'
 alias code='cursor'
-alias open='explorer'
+# explorer returns 1 even when it successfully opens the target, so wrap it
+# in a function that reports success. Otherwise scripts (and Claude Code)
+# read the exit status as a failure.
+open() { explorer "$@"; return 0; }
+alias c='claude --enable-auto-mode'
 # }}}
 
 #---------------------------------------------------------------------------

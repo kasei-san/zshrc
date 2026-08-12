@@ -145,6 +145,12 @@ alias cop='bundle exec rubocop -a'
 
 alias tf='terraform'
 
+# terraform init のたびにプロバイダバイナリをダウンロードし直さないよう、
+# 全ディレクトリで共有するプラグインキャッシュを指定する
+# (ディレクトリが存在しないとterraformが無言でキャッシュをスキップするため事前作成する)
+export TF_PLUGIN_CACHE_DIR="$HOME/.terraform.d/plugin-cache"
+mkdir -p "$TF_PLUGIN_CACHE_DIR"
+
 #--------------------------------------------------------------------------
 # fzf {{{
 #--------------------------------------------------------------------------

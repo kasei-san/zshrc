@@ -1,2 +1,5 @@
 cdd_pwd_list
 *cdd_pwd_list*
+
+# エディタ等が残すバックアップ
+*.bak

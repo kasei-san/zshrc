@@ -267,6 +267,9 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 alias code='cursor'
 alias c='claude'
 
+# Terraform Cloud API token (read from terraform login credentials)
+export TFC_TOKEN=$(python3 -c "import json; print(json.load(open('$HOME/.terraform.d/credentials.tfrc.json'))['credentials']['app.terraform.io']['token'])" 2>/dev/null)
+
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/path.zsh.inc'; fi
 
@@ -274,3 +277,11 @@ if [ -f '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/path.zsh.
 if [ -f '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/completion.zsh.inc'; fi
 export CLOUDSDK_PYTHON=$(pyenv which python3)
 export PATH="/opt/homebrew/share/google-cloud-sdk/bin:$PATH"
+
+# gh CLI (v2.87+) が macOS の Security framework 経由の証明書検証で
+# "tls: failed to verify certificate: x509: OSStatus -26276" エラーを起こす問題の回避策
+# Go 1.23+ の macOS 証明書検証バックエンドの問題と思われる (2026-02 時点)
+export GODEBUG=x509ignoreCN=0
+
+# ~/.claude/bin に PATH を通す (ipinfo-api, raindrop-api, athena-query 等のヘルパー)
+export PATH="$HOME/.claude/bin:$PATH"

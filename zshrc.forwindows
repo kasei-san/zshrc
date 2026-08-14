@@ -9,6 +9,10 @@
 #---------------------------------------------------------------------------
 export LANG=ja_JP.UTF-8
 export EDITOR=vim
+
+# ローカルLLM版の Claude Code ランチャ `ccl`
+# 実体は E:\llm\claude-code-local（github.com/kasei-san/claude-code-local）
+export PATH="$PATH:/e/llm/claude-code-local"
 # }}}
 
 #---------------------------------------------------------------------------

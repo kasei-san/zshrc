@@ -201,17 +201,18 @@ alias pp='pbpaste | patch -p1'
 #--------------------------------------------------------------------------
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH=${PYENV_ROOT}/bin:$PATH
-eval "$(pyenv init -)"
+# --no-rehash: 起動のたびの shim 再生成（約1秒）を省く。pyenv install / pip install 後は自動で rehash される
+eval "$(pyenv init - --no-rehash zsh)"
 # pip
 export PATH=$PATH:/Users/kobayashi/.local/bin
 # }}}
 
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+if which rbenv > /dev/null; then eval "$(rbenv init - --no-rehash zsh)"; fi
 if which hub > /dev/null; then eval "$(hub alias -s)"; fi
 if which direnv > /dev/null; then eval "$(direnv hook $0)"; fi
 
 # autojump
-[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+[[ -s /opt/homebrew/etc/profile.d/autojump.sh ]] && . /opt/homebrew/etc/profile.d/autojump.sh
 # vim:set foldmethod=marker:
 
 fpath=(/usr/local/share/zsh-completions $fpath)
@@ -240,14 +241,21 @@ export PATH="/usr/local/opt/postgresql@9.6/bin:$PATH"
 
 # for nvm
 export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+# --no-use: 起動時の `nvm use default`（約5秒）を省き、default の node を PATH に直接通す
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh" --no-use  # This loads nvm
+if [ -s "$NVM_DIR/alias/default" ]; then
+  _nvm_default=$(<"$NVM_DIR/alias/default")
+  _nvm_bins=("$NVM_DIR"/versions/node/v${_nvm_default#v}*(Nn))
+  [[ -n $_nvm_bins ]] && export PATH="${_nvm_bins[-1]}/bin:$PATH"
+  unset _nvm_default _nvm_bins
+fi
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 # eb
 export PATH="/Users/kobayashi/.ebcli-virtual-env/executables:$PATH"
 
 # ruby
-export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@3)"
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=/opt/homebrew/opt/openssl@3"
 export LDFLAGS="-L/opt/homebrew/opt/readline/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/readline/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/readline/lib/pkgconfig"
@@ -268,14 +276,16 @@ alias code='cursor'
 alias c='claude'
 
 # Terraform Cloud API token (read from terraform login credentials)
-export TFC_TOKEN=$(python3 -c "import json; print(json.load(open('$HOME/.terraform.d/credentials.tfrc.json'))['credentials']['app.terraform.io']['token'])" 2>/dev/null)
+# python3 は pyenv shim 経由だと約2秒かかるので jq で読む
+export TFC_TOKEN=$(jq -r '.credentials["app.terraform.io"].token // empty' "$HOME/.terraform.d/credentials.tfrc.json" 2>/dev/null)
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/completion.zsh.inc'; fi
-export CLOUDSDK_PYTHON=$(pyenv which python3)
+# pyenv global は 2.7 なので `pyenv which python3` は結局 brew の python3 を返す（約1.5秒かかる）ため直接指定
+export CLOUDSDK_PYTHON=/opt/homebrew/bin/python3
 export PATH="/opt/homebrew/share/google-cloud-sdk/bin:$PATH"
 
 # gh CLI (v2.87+) が macOS の Security framework 経由の証明書検証で

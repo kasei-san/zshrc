@@ -201,7 +201,7 @@ alias pp='pbpaste | patch -p1'
 #--------------------------------------------------------------------------
 export PYENV_ROOT="${HOME}/.pyenv"
 export PATH=${PYENV_ROOT}/bin:$PATH
-# --no-rehash: 起動のたびの shim 再生成（約1秒）を省く。pyenv install / pip install 後は自動で rehash される
+# --no-rehash: 起動のたびの shim 再生成（約1秒）を省く。新しいコマンドが見つからないときは pyenv rehash / rbenv rehash
 eval "$(pyenv init - --no-rehash zsh)"
 # pip
 export PATH=$PATH:/Users/kobayashi/.local/bin
@@ -245,8 +245,9 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh" --no-use  # This loads nvm
 if [ -s "$NVM_DIR/alias/default" ]; then
   _nvm_default=$(<"$NVM_DIR/alias/default")
-  _nvm_bins=("$NVM_DIR"/versions/node/v${_nvm_default#v}*(Nn))
-  [[ -n $_nvm_bins ]] && export PATH="${_nvm_bins[-1]}/bin:$PATH"
+  _nvm_bins=("$NVM_DIR"/versions/node/v${_nvm_default#v}(|.*)(Nn))
+  # default が lts/* 等のエイリアスで解決できないときは従来どおり nvm use する
+  if [[ -n $_nvm_bins ]]; then export PATH="${_nvm_bins[-1]}/bin:$PATH"; else nvm use default --silent; fi
   unset _nvm_default _nvm_bins
 fi
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion

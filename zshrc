@@ -1,5 +1,4 @@
-export Lang=ja_JP.UTF-8
-export PATH=/usr/local/bin:$PATH #brew
+export PATH=/usr/local/bin:$PATH # docker・aws CLI 等
 #---------------------------------------------------------------------------
 # 履歴関係 {{{
 #----------------------------------------------------------------------------------------
@@ -200,21 +199,19 @@ alias pp='pbpaste | patch -p1'
 # python {{{
 #--------------------------------------------------------------------------
 export PYENV_ROOT="${HOME}/.pyenv"
-export PATH=${PYENV_ROOT}/bin:$PATH
-eval "$(pyenv init -)"
+# --no-rehash: 起動のたびの shim 再生成（約1秒）を省く。新しいコマンドが見つからないときは pyenv rehash / rbenv rehash
+eval "$(pyenv init - --no-rehash zsh)"
 # pip
 export PATH=$PATH:/Users/kobayashi/.local/bin
 # }}}
 
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
-if which hub > /dev/null; then eval "$(hub alias -s)"; fi
-if which direnv > /dev/null; then eval "$(direnv hook $0)"; fi
+if which rbenv > /dev/null; then eval "$(rbenv init - --no-rehash zsh)"; fi
+if which direnv > /dev/null; then eval "$(direnv hook zsh)"; fi
 
 # autojump
-[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+[[ -s /opt/homebrew/etc/profile.d/autojump.sh ]] && . /opt/homebrew/etc/profile.d/autojump.sh
 # vim:set foldmethod=marker:
 
-fpath=(/usr/local/share/zsh-completions $fpath)
 autoload -Uz compinit
 compinit
 
@@ -223,10 +220,10 @@ compinit
 #--------------------------------------------------------------------------
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list _history
-zstyle ':completion:*:messages' format $YELLOW'%d'$DEFAULT
-zstyle ':completion:*:warnings' format $RED'No matches for:'$YELLOW' %d'$DEFAULT
-zstyle ':completion:*:descriptions' format $YELLOW'completing %B%d%b'$DEFAULT
-zstyle ':completion:*:corrections' format $YELLOW'%B%d '$RED'(errors: %e)%b'$DEFAULT
+zstyle ':completion:*:messages' format '%F{yellow}%d%f'
+zstyle ':completion:*:warnings' format '%F{red}No matches for:%F{yellow} %d%f'
+zstyle ':completion:*:descriptions' format '%F{yellow}completing %B%d%b%f'
+zstyle ':completion:*:corrections' format '%F{yellow}%B%d %F{red}(errors: %e)%b%f'
 zstyle ':completion:*:options' description 'yes'
 
 # グループ名に空文字列を指定すると，マッチ対象のタグ名がグループ名に使われる。
@@ -235,28 +232,27 @@ zstyle ':completion:*' group-name ''
 # }}}
 
 
-# postgresql 9.6
-export PATH="/usr/local/opt/postgresql@9.6/bin:$PATH"
-
 # for nvm
 export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+# --no-use: 起動時の `nvm use default`（約5秒）を省き、default の node を PATH に直接通す
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh" --no-use  # This loads nvm
+if [ -s "$NVM_DIR/alias/default" ]; then
+  _nvm_default=$(<"$NVM_DIR/alias/default")
+  _nvm_bins=("$NVM_DIR"/versions/node/v${_nvm_default#v}(|.*)(Nn))
+  # default が lts/* 等のエイリアスで解決できないときは従来どおり nvm use する
+  if [[ -n $_nvm_bins ]]; then export PATH="${_nvm_bins[-1]}/bin:$PATH"; else nvm use default --silent; fi
+  unset _nvm_default _nvm_bins
+fi
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 # eb
 export PATH="/Users/kobayashi/.ebcli-virtual-env/executables:$PATH"
 
 # ruby
-export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@3)"
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=/opt/homebrew/opt/openssl@3"
 export LDFLAGS="-L/opt/homebrew/opt/readline/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/readline/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/readline/lib/pkgconfig"
-
-# snap
-if [[ $(which snap) ]]; then
-    # /bin/snap を PATH に追加
-    export PATH="/snap/bin:$PATH"
-fi
 
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
@@ -268,20 +264,22 @@ alias code='cursor'
 alias c='claude'
 
 # Terraform Cloud API token (read from terraform login credentials)
-export TFC_TOKEN=$(python3 -c "import json; print(json.load(open('$HOME/.terraform.d/credentials.tfrc.json'))['credentials']['app.terraform.io']['token'])" 2>/dev/null)
+# python3 を起動するより jq の方が軽い
+export TFC_TOKEN=$(jq -r '.credentials["app.terraform.io"].token // empty' "$HOME/.terraform.d/credentials.tfrc.json" 2>/dev/null)
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/kobayashi/work/SENRI-web-google-cloud/google-cloud-sdk/completion.zsh.inc'; fi
-export CLOUDSDK_PYTHON=$(pyenv which python3)
+# `pyenv which python3` は起動のたびに約1.5秒かかるため直接指定
+export CLOUDSDK_PYTHON=/opt/homebrew/bin/python3
 export PATH="/opt/homebrew/share/google-cloud-sdk/bin:$PATH"
 
-# gh CLI (v2.87+) が macOS の Security framework 経由の証明書検証で
-# "tls: failed to verify certificate: x509: OSStatus -26276" エラーを起こす問題の回避策
-# Go 1.23+ の macOS 証明書検証バックエンドの問題と思われる (2026-02 時点)
-export GODEBUG=x509ignoreCN=0
 
 # ~/.claude/bin に PATH を通す (ipinfo-api, raindrop-api, athena-query 等のヘルパー)
 export PATH="$HOME/.claude/bin:$PATH"
+
+# PATH の重複を除く（PATH=... の文字列代入では -U が効かないので最後に配列として入れ直す）
+typeset -U path
+path=($path)
